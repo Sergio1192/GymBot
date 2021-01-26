@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 using WebScrapper.Models;
+using WebScrapper.Services;
 
 namespace WebScrapper.Web
 {
@@ -11,17 +13,16 @@ namespace WebScrapper.Web
 
         public Uri BaseUrl => new Uri("http://gymvirtual.com/post_calendar/");
 
-        public Uri Url
+        public Uri GetUrl(IDateTimeService dateTimeService)
         {
-            get
-            {
-                return new Uri($"{BaseUrl.ToString()}/calendario-{DateTime.Today.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-ES"))}-{DateTime.Today.Year}");
-            }
+            DateTime today = dateTimeService.GetToday();
+
+            return new Uri($"{BaseUrl}/calendario-{today.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-ES"))}-{today.Year}");
         }
 
-        public IEnumerable<VideoModel> GetVideosAsync()
+        public Task<IEnumerable<VideoModel>> GetVideosAsync()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
