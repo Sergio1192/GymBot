@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using WebScrapper.Models;
 
-namespace WebScrapper
+namespace WebScrapper.Services
 {
     public interface IWebScrapperService
     {
