@@ -9,10 +9,10 @@ namespace WebScrapper.Web
     public interface IWeb
     {
         string Name { get; }
-        Uri BaseUrl { get; }
+        string BaseUrl { get; }
 
-        Uri GetUrl(IDateTimeService dateTimeService);
+        string GetUrl(IDateTimeService dateTimeService);
 
-        Task<IEnumerable<VideoModel>> GetVideosAsync();
+        Task<IEnumerable<VideoModel>> GetVideosAsync(IDateTimeService dateTimeService);
     }
 }
