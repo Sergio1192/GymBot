@@ -1,3 +1,6 @@
+using FluentAssertions;
+using Moq;
+using System;
 using System.Threading.Tasks;
 using WebScrapper.Services;
 using WebScrapper.Web;
@@ -7,10 +10,25 @@ namespace WebScrapperTests
 {
     public class GymVitualWebTest
     {
-        [Fact]
-        public async Task Ok()
+        private readonly IWeb _web;
+
+        public GymVitualWebTest()
         {
-            var videos = await new GymVirtualWeb().GetVideosAsync(new DateTimeService());
+            _web = new GymVirtualWeb();
+        }
+
+        [Fact]
+        public async Task Get_Videos_For_Today_Ok()
+        {
+            // Arrange
+            var dateTimeMock = new Mock<IDateTimeService>();
+            dateTimeMock.Setup(service => service.GetToday()).Returns(DateTime.Today);
+
+            // Act
+            var videos = await _web.GetVideosAsync(dateTimeMock.Object);
+
+            // Assert
+            videos.Should().NotBeNullOrEmpty();
         }
     }
 }

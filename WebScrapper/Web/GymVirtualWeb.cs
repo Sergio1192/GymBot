@@ -1,8 +1,8 @@
-﻿using HtmlAgilityPack;
-using PuppeteerSharp;
+﻿using PuppeteerSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using WebScrapper.Models;
 using WebScrapper.Services;
@@ -24,57 +24,48 @@ namespace WebScrapper.Web
 
         public async Task<IEnumerable<VideoModel>> GetVideosAsync(IDateTimeService dateTimeService)
         {
-            try
-            {
-                var kk = await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
+            const string SELECTOR_LIST_LINKS = ".semana > .today .elementsDia .titleElemCalendar";
+            const string SELECTOR_VIDEO = ".modalCalendario > .contentModalCalendar .video iframe";
+            const string SELECTOR_COOKIE = ".sra-layout .sra-panel__aside__buttons a";
 
-                using (var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = false }))
+            const string PROPERTY_NAME_VIDEO_URL = "src";
+
+            // Download de browser
+            await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
+
+            using (var browser = await Puppeteer.LaunchAsync(new LaunchOptions() { Headless = false }))
+            {
+                using (var page = await browser.NewPageAsync())
                 {
-                    using (var page = await browser.NewPageAsync())
+                    // Go to the page
+                    await page.GoToAsync(this.GetUrl(dateTimeService), WaitUntilNavigation.Networkidle0);
+
+                    // Acept Cookies
+                    var cookieButtons = await page.WaitAndQuerySelectorAllAsync(SELECTOR_COOKIE);
+                    await cookieButtons.First().ClickAsync();
+
+                    // Video links
+                    var links = await page.WaitAndQuerySelectorAllAsync(SELECTOR_LIST_LINKS);
+
+                    var videos = new List<VideoModel>();
+                    foreach (var link in links)
                     {
-                        await page.GoToAsync(this.GetUrl(dateTimeService), WaitUntilNavigation.DOMContentLoaded);
+                        await link.HoverAsync();
+                        await link.ClickAsync();
 
-                        await page.WaitForSelectorAsync(".semana > .today .elementsDia .titleElemCalendar");
-                        var list = await page.QuerySelectorAllAsync(".semana > .today.elementsDia.titleElemCalendar");
+                        // Get video url
+                        var videoUrl = await page.GetAttributeFromQuerySelectorAsync<string>(SELECTOR_VIDEO, PROPERTY_NAME_VIDEO_URL);
 
-                        //var kk = await page.WaitForSelectorAsync(".semana > .today > .elementsDia > .titleElemCalendar > b");
-                        //await kk.ClickAsync();
-
-                        //await page.ClickAsync(".semana > .today > .elementsDia > .titleElemCalendar > b")
-                        //await page.WaitForNavigationAsync();
-
-                        //await page.ClickAsync("input[name='btnK']");
-                        //await Task.Delay(1000);
-
-                        /*await page.TypeAsync("input[name='q']", ".NET Fiddle"); //enter what to search for
-
-                        //await page.ClickAsync("input[name='btnK']"); //press google search button
-                        //The code above doesn't actually work since there are 2 same buttons for running search
-                        //luckily I can just execute JS to click the first button
-                        string jsScript = "document.querySelector(\"input[name='btnK']\").click()";
-
-                        await page.EvaluateExpressionAsync(jsScript);
-
-                        //Wait for results to render
-                        await Task.Delay(2000);*/
-
-                        string htmlContent = await page.GetContentAsync();
-
-                        Console.WriteLine("Press any key to close browser and program.");
-                        Console.ReadKey();
-
-                        await browser.CloseAsync();
-
-                        var htmlDocument = new HtmlDocument();
-                        htmlDocument.LoadHtml(htmlContent);
-
-                        return null;
+                        // Create model
+                        var video = new VideoModel(videoUrl);
+                        videos.Add(video);
                     }
+
+                    await page.CloseAsync();
+                    await browser.CloseAsync();
+
+                    return videos;
                 }
-            }
-            catch (Exception e)
-            {
-                throw;
             }
         }
     }
