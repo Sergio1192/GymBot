@@ -26,9 +26,13 @@ namespace WebScrapper.Web
         {
             const string SELECTOR_LIST_LINKS = ".semana > .today .elementsDia .titleElemCalendar";
             const string SELECTOR_VIDEO = ".modalCalendario > .contentModalCalendar .video iframe";
+            const string SELECTOR_CLOSE_VIDEO = ".modalCalendario > .cerrarModal";
             const string SELECTOR_COOKIE = ".sra-layout .sra-panel__aside__buttons a";
 
             const string PROPERTY_NAME_VIDEO_URL = "src";
+
+            const string YOUTUBE_ROUTE_EMBED = "embed/";
+            const string YOUTUBE_ROUTE_NORMAL = "watch?v=";
 
             // Download de browser
             await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
@@ -52,9 +56,16 @@ namespace WebScrapper.Web
                     {
                         await link.HoverAsync();
                         await link.ClickAsync();
+                        await page.WaitForTimeoutAsync(1000);
 
                         // Get video url
                         var videoUrl = await page.GetAttributeFromQuerySelectorAsync<string>(SELECTOR_VIDEO, PROPERTY_NAME_VIDEO_URL);
+                        videoUrl = videoUrl?.Replace(YOUTUBE_ROUTE_EMBED, YOUTUBE_ROUTE_NORMAL);
+
+                        // Close dialog
+                        var closeDialog = await page.WaitForSelectorAsync(SELECTOR_CLOSE_VIDEO);
+                        await closeDialog.ClickAsync();
+                        await page.WaitForTimeoutAsync(1000);
 
                         // Create model
                         var video = new VideoModel(videoUrl);

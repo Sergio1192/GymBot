@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using WebScrapper.Services;
 using WebScrapper.Web;
@@ -18,7 +19,7 @@ namespace WebScrapperTests
         }
 
         [Fact]
-        public async Task Get_Videos_For_Today_Ok()
+        public async Task Get_Videos_For_Today()
         {
             // Arrange
             var dateTimeMock = GetTodayIDateTimeService();
@@ -31,7 +32,7 @@ namespace WebScrapperTests
         }
 
         [Fact]
-        public async Task Get_Videos_For_Today_By_Name_Ok()
+        public async Task Get_Videos_For_Today_By_Name()
         {
             // Arrange
             var dateTimeMock = GetTodayIDateTimeService();
@@ -42,6 +43,19 @@ namespace WebScrapperTests
 
             // Assert
             videos.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public async Task Videos_Not_Repeated()
+        {
+            // Arrange
+            var dateTimeMock = GetTodayIDateTimeService();
+
+            // Act
+            var videos = await _web.GetVideosAsync(dateTimeMock);
+
+            // Assert
+            videos.Select(v => v.Url).Should().OnlyHaveUniqueItems();
         }
 
         private IDateTimeService GetTodayIDateTimeService()

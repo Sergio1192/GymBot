@@ -5,70 +5,56 @@
 
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WebScrapper.Models;
+using WebScrapper.Services;
 
 namespace GymBot.Bots
 {
     public class Bot : ActivityHandler
     {
+        private readonly IWebScrapperService _webScrapperService;
+
+        public Bot(IWebScrapperService webScrapperService)
+        {
+            _webScrapperService = webScrapperService ?? throw new ArgumentNullException(nameof(webScrapperService));
+        }
+
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            var replyText = $"Echo: {turnContext.Activity.Text}";
-            var textMsg = MessageFactory.Text(replyText, replyText);
-            //await turnContext.SendActivityAsync(, cancellationToken);
+            var intialText = $"Voy a intentar recuperar los vídeos de {WebScrapper.Web.Webs.GYM_VIRTUAL.Name} para hoy";
+            await turnContext.SendActivityAsync(MessageFactory.Text(text: intialText, ssml: intialText), cancellationToken);
 
-            ///
-            /*var videoMsg = MessageFactory.Attachment(
-                new VideoCard(
-                    title: "My Video",
-                    subtitle: "a subtitle", 
-                    text: "some text",
-                    autostart: true,
-                    media: new[] 
-                    { 
-                        new MediaUrl(@"https://www.youtube.com/watch?v=S8tjd5oNtQk"),
-                        new MediaUrl(@"https://www.youtube.com/watch?v=BjO7DpOxPRs")
-                    }
-                ).ToAttachment()
-            );*/
+            IEnumerable<VideoModel> videos = new List<VideoModel>();
+            try
+            {
+                videos = await _webScrapperService.GetVideosByWebNameAsync(WebScrapper.Web.Webs.GYM_VIRTUAL.Name);
+            }
+            catch { }
 
-            var videoMsg = MessageFactory.Carousel(
-                new Attachment[]
-                {
-                    new VideoCard(
-                        title: "My Video",
-                        subtitle: "a subtitle",
-                        text: "some text",
-                        autostart: true,
-                        media: new[]
-                        {
-                            new MediaUrl(@"https://www.youtube.com/watch?v=S8tjd5oNtQk"),
-                        }
-                    ).ToAttachment(),
-                    new VideoCard(
-                        title: "My Video",
-                        subtitle: "a subtitle",
-                        text: "some text",
-                        autostart: false,
-                        media: new[]
-                        {
-                            new MediaUrl(@"https://www.youtube.com/watch?v=BjO7DpOxPRs")
-                        }
-                    ).ToAttachment()
-                }
-            );
+            var attachments = new List<Attachment>();
+            foreach (var video in videos)
+            {
+                var attachment = new VideoCard(
+                    title: video.Title,
+                    text: video.Text,
+                    media: new[] { new MediaUrl(video.Url) }
+                ).ToAttachment();
 
-            //await turnContext.SendActivityAsync(videoMsg, cancellationToken);
+                attachments.Add(attachment);
+            }
 
-            await turnContext.SendActivitiesAsync(
-                new IActivity[]
-                {
-                    textMsg,
-                    videoMsg
-                }, cancellationToken
-            );
+            var textOk = $"Aquí tienes los vídeos de {WebScrapper.Web.Webs.GYM_VIRTUAL.Name} para hoy";
+            var textKo = $"Lo siento, no he podido recuperar ningun vídeo de {WebScrapper.Web.Webs.GYM_VIRTUAL.Name} para hoy";           
+            var text = attachments.Any() ? textOk : textKo;
+
+            var videoMsg = MessageFactory.Carousel(attachments, text: text, ssml: text);
+
+            await turnContext.SendActivityAsync(videoMsg, cancellationToken);
         }
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
