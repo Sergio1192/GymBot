@@ -29,12 +29,15 @@ namespace GymBot.Bots
             var intialText = $"Voy a intentar recuperar los vídeos de {GymVideosGetter.Web.Webs.GYM_VIRTUAL.Name} para hoy";
             await turnContext.SendActivityAsync(MessageFactory.Text(text: intialText, ssml: intialText), cancellationToken);
 
-            IEnumerable<VideoModel> videos = new List<VideoModel>();
+            IEnumerable<VideoModel> videos;
             try
             {
-                videos = await _webScrapperService.GetVideosByWebNameAsync(GymVideosGetter.Web.Webs.GYM_VIRTUAL.Name);
+                videos = await _webScrapperService.GetVideosByWebNameAsync(GymVideosGetter.Web.Webs.GYM_VIRTUAL.Name, DateTime.Today);
             }
-            catch { }
+            catch
+            {
+                videos = new List<VideoModel>();
+            }
 
             var attachments = new List<Attachment>();
             foreach (var video in videos)

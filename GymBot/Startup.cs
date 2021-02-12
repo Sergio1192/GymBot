@@ -56,7 +56,7 @@ namespace GymBot
                     endpoints.MapControllers();
                 });
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
         }
     }
 }

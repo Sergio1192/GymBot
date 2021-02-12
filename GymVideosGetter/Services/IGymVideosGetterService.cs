@@ -7,6 +7,6 @@ namespace GymVideosGetter.Services
 {
     public interface IGymVideosGetterService
     {
-        Task<IEnumerable<VideoModel>> GetVideosByWebNameAsync(string name, DateTime? date = null);
+        Task<IEnumerable<VideoModel>> GetVideosByWebNameAsync(string name, DateTime date);
     }
 }

@@ -35,47 +35,44 @@ namespace GymVideosGetter.Web
             // Download de browser
             await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultRevision);
 
-            using (var browser = await Puppeteer.LaunchAsync(new LaunchOptions() { Headless = false }))
+            using var browser = await Puppeteer.LaunchAsync(new LaunchOptions() { Headless = false });
+            using var page = await browser.NewPageAsync();
+
+            // Go to the page
+            await page.GoToAsync(this.GetUrl(date), WaitUntilNavigation.Networkidle0);
+
+            // Acept Cookies
+            var cookieButtons = await page.WaitAndQuerySelectorAllAsync(SELECTOR_COOKIE);
+            await cookieButtons.First().ClickAsync();
+
+            // Video links
+            var links = await page.WaitAndQuerySelectorAllAsync(SELECTOR_LIST_LINKS);
+
+            var videos = new List<VideoModel>();
+            foreach (var link in links)
             {
-                using (var page = await browser.NewPageAsync())
-                {
-                    // Go to the page
-                    await page.GoToAsync(this.GetUrl(date), WaitUntilNavigation.Networkidle0);
+                await link.HoverAsync();
+                await link.ClickAsync();
+                await page.WaitForTimeoutAsync(1000);
 
-                    // Acept Cookies
-                    var cookieButtons = await page.WaitAndQuerySelectorAllAsync(SELECTOR_COOKIE);
-                    await cookieButtons.First().ClickAsync();
+                // Get video url
+                var videoUrl = await page.GetAttributeFromQuerySelectorAsync<string>(SELECTOR_VIDEO, PROPERTY_NAME_VIDEO_URL);
+                videoUrl = videoUrl?.Replace(YOUTUBE_ROUTE_EMBED, YOUTUBE_ROUTE_NORMAL);
 
-                    // Video links
-                    var links = await page.WaitAndQuerySelectorAllAsync(SELECTOR_LIST_LINKS);
+                // Close dialog
+                var closeDialog = await page.WaitForSelectorAsync(SELECTOR_CLOSE_VIDEO);
+                await closeDialog.ClickAsync();
+                await page.WaitForTimeoutAsync(1000);
 
-                    var videos = new List<VideoModel>();
-                    foreach (var link in links)
-                    {
-                        await link.HoverAsync();
-                        await link.ClickAsync();
-                        await page.WaitForTimeoutAsync(1000);
-
-                        // Get video url
-                        var videoUrl = await page.GetAttributeFromQuerySelectorAsync<string>(SELECTOR_VIDEO, PROPERTY_NAME_VIDEO_URL);
-                        videoUrl = videoUrl?.Replace(YOUTUBE_ROUTE_EMBED, YOUTUBE_ROUTE_NORMAL);
-
-                        // Close dialog
-                        var closeDialog = await page.WaitForSelectorAsync(SELECTOR_CLOSE_VIDEO);
-                        await closeDialog.ClickAsync();
-                        await page.WaitForTimeoutAsync(1000);
-
-                        // Create model
-                        var video = new VideoModel(videoUrl);
-                        videos.Add(video);
-                    }
-
-                    await page.CloseAsync();
-                    await browser.CloseAsync();
-
-                    return videos;
-                }
+                // Create model
+                var video = new VideoModel(videoUrl);
+                videos.Add(video);
             }
+
+            await page.CloseAsync();
+            await browser.CloseAsync();
+
+            return videos;
         }
     }
 }

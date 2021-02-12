@@ -8,9 +8,9 @@ namespace GymVideosGetter.Services
 {
     public class GymVideosGetterService : IGymVideosGetterService
     {
-        public Task<IEnumerable<VideoModel>> GetVideosByWebNameAsync(string name, DateTime? date = null)
+        public Task<IEnumerable<VideoModel>> GetVideosByWebNameAsync(string name, DateTime date)
         {
-            return Webs.GetByName(name).GetVideosAsync(date ?? DateTime.Today);
+            return Webs.GetByName(name).GetVideosAsync(date);
         }
     }
 }
