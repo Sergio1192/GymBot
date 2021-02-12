@@ -21,7 +21,8 @@ namespace GymVideosGetter.Web
 
         public async Task<IEnumerable<VideoModel>> GetVideosAsync(DateTime date)
         {
-            const string SELECTOR_LIST_LINKS = ".semana > .today .elementsDia .titleElemCalendar";
+            const string SELECTOR_DAY = ".semana > .diaTableCalendar";
+            const string SELECTOR_LIST_LINKS = ".elementsDia .titleElemCalendar";
             const string SELECTOR_VIDEO = ".modalCalendario > .contentModalCalendar .video iframe";
             const string SELECTOR_CLOSE_VIDEO = ".modalCalendario > .cerrarModal";
             const string SELECTOR_COOKIE = ".sra-layout .sra-panel__aside__buttons a";
@@ -40,12 +41,14 @@ namespace GymVideosGetter.Web
             // Go to the page
             await page.GoToAsync(this.GetUrl(date), WaitUntilNavigation.Networkidle0);
 
-            // Acept Cookies
+            // Accept Cookies
             var cookieButtons = await page.WaitAndQuerySelectorAllAsync(SELECTOR_COOKIE);
             await cookieButtons.First().ClickAsync();
 
             // Video links
-            var links = await page.WaitAndQuerySelectorAllAsync(SELECTOR_LIST_LINKS);
+            await page.WaitForSelectorAsync(SELECTOR_DAY);
+            var dayElement = await page.EvaluateExpressionElementHandleAsync($"Array.from(document.querySelectorAll('{SELECTOR_DAY}')).filter(element => element.querySelector('h5').textContent.includes('{date.Day:00}.'))[0]");
+            var links = await dayElement.QuerySelectorAllAsync(SELECTOR_LIST_LINKS);
 
             var videos = new List<VideoModel>();
             foreach (var link in links)

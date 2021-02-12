@@ -32,5 +32,17 @@ namespace PuppeteerSharp
 
             return elementsHandle;
         }
+
+        public static async Task<ElementHandle> EvaluateExpressionElementHandleAsync(this Page page, string script)
+        {
+            var handle = await page.EvaluateExpressionHandleAsync(script);
+
+            if (handle is ElementHandle element)
+            {
+                return element;
+            }
+
+            return null;
+        }
     }
 }
