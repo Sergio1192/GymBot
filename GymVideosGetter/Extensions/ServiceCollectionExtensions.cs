@@ -7,7 +7,6 @@ namespace GymVideosGetter
     {
         public static IServiceCollection AddGymVideosGetter(this IServiceCollection services)
         {
-            services.AddSingleton<IDateTimeService, DateTimeService>();
             services.AddSingleton<IGymVideosGetterService, GymVideosGetterService>();
 
             return services;

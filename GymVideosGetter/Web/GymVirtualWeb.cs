@@ -15,14 +15,12 @@ namespace GymVideosGetter.Web
 
         public string BaseUrl => "http://gymvirtual.com/post_calendar";
 
-        public string GetUrl(IDateTimeService dateTimeService)
+        public string GetUrl(DateTime date)
         {
-            DateTime today = dateTimeService.GetToday();
-
-            return $"{BaseUrl}/calendario-{today.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-ES"))}-{today.Year}";
+            return $"{BaseUrl}/calendario-{date.ToString("MMMM", CultureInfo.CreateSpecificCulture("es-ES"))}-{date.Year}";
         }
 
-        public async Task<IEnumerable<VideoModel>> GetVideosAsync(IDateTimeService dateTimeService)
+        public async Task<IEnumerable<VideoModel>> GetVideosAsync(DateTime date)
         {
             const string SELECTOR_LIST_LINKS = ".semana > .today .elementsDia .titleElemCalendar";
             const string SELECTOR_VIDEO = ".modalCalendario > .contentModalCalendar .video iframe";
@@ -42,7 +40,7 @@ namespace GymVideosGetter.Web
                 using (var page = await browser.NewPageAsync())
                 {
                     // Go to the page
-                    await page.GoToAsync(this.GetUrl(dateTimeService), WaitUntilNavigation.Networkidle0);
+                    await page.GoToAsync(this.GetUrl(date), WaitUntilNavigation.Networkidle0);
 
                     // Acept Cookies
                     var cookieButtons = await page.WaitAndQuerySelectorAllAsync(SELECTOR_COOKIE);

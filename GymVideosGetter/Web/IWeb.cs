@@ -1,8 +1,7 @@
-﻿using System;
+﻿using GymVideosGetter.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GymVideosGetter.Models;
-using GymVideosGetter.Services;
 
 namespace GymVideosGetter.Web
 {
@@ -11,8 +10,8 @@ namespace GymVideosGetter.Web
         string Name { get; }
         string BaseUrl { get; }
 
-        string GetUrl(IDateTimeService dateTimeService);
+        string GetUrl(DateTime date);
 
-        Task<IEnumerable<VideoModel>> GetVideosAsync(IDateTimeService dateTimeService);
+        Task<IEnumerable<VideoModel>> GetVideosAsync(DateTime date);
     }
 }
