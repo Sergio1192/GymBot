@@ -1,11 +1,10 @@
-﻿using PuppeteerSharp;
+﻿using GymVideosGetter.Models;
+using PuppeteerSharp;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using GymVideosGetter.Models;
-using GymVideosGetter.Services;
 
 namespace GymVideosGetter.Web
 {

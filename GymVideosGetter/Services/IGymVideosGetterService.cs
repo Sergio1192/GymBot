@@ -1,7 +1,7 @@
-﻿using System;
+﻿using GymVideosGetter.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GymVideosGetter.Models;
 
 namespace GymVideosGetter.Services
 {

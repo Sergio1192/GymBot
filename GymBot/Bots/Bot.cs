@@ -3,6 +3,8 @@
 //
 // Generated with Bot Builder V4 SDK Template for Visual Studio EchoBot v4.11.1
 
+using GymVideosGetter.Models;
+using GymVideosGetter.Services;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using System;
@@ -10,8 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using GymVideosGetter.Models;
-using GymVideosGetter.Services;
 
 namespace GymBot.Bots
 {

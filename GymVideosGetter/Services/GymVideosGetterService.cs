@@ -1,8 +1,8 @@
-﻿using System;
+﻿using GymVideosGetter.Models;
+using GymVideosGetter.Web;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GymVideosGetter.Models;
-using GymVideosGetter.Web;
 
 namespace GymVideosGetter.Services
 {

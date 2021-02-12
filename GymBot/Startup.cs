@@ -4,6 +4,7 @@
 // Generated with Bot Builder V4 SDK Template for Visual Studio EchoBot v4.11.1
 
 using GymBot.Bots;
+using GymVideosGetter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot.Builder;
@@ -11,7 +12,6 @@ using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using GymVideosGetter;
 
 namespace GymBot
 {

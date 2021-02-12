@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using GymVideosGetter.Services;
+﻿using GymVideosGetter.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GymVideosGetter
 {
