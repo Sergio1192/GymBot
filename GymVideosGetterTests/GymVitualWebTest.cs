@@ -3,8 +3,8 @@ using Moq;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using WebScrapper.Services;
-using WebScrapper.Web;
+using GymVideosGetter.Services;
+using GymVideosGetter.Web;
 using Xunit;
 
 namespace WebScrapperTests
@@ -36,7 +36,7 @@ namespace WebScrapperTests
         {
             // Arrange
             var dateTimeMock = GetTodayIDateTimeService();
-            var webScrapperService = new WebScrapperService(dateTimeMock);
+            var webScrapperService = new GymVideosGetterService(dateTimeMock);
 
             // Act
             var videos = await webScrapperService.GetVideosByWebNameAsync(Webs.GYM_VIRTUAL.Name);

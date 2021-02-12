@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebScrapper.Models;
-using WebScrapper.Web;
+using GymVideosGetter.Models;
+using GymVideosGetter.Web;
 
-namespace WebScrapper.Services
+namespace GymVideosGetter.Services
 {
-    public class WebScrapperService : IWebScrapperService
+    public class GymVideosGetterService : IGymVideosGetterService
     {
         private readonly IDateTimeService _dateTimeService;
 
-        public WebScrapperService(IDateTimeService dateTimeService)
+        public GymVideosGetterService(IDateTimeService dateTimeService)
         {
             _dateTimeService = dateTimeService ?? throw new ArgumentNullException(nameof(dateTimeService));
         }

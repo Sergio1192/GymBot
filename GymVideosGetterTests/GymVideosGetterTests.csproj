@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebScrapper\WebScrapper.csproj" />
+    <ProjectReference Include="..\GymVideosGetter\GymVideosGetter.csproj" />
   </ItemGroup>
 
 </Project>

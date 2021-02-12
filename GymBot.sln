@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GymBot", "GymBot\GymBot.csproj", "{016D7D20-CC40-4959-8986-D800E084E6F6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebScrapper", "WebScrapper\WebScrapper.csproj", "{1222BB10-01FD-432A-B552-3F8A29F89518}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GymVideosGetter", "GymVideosGetter\GymVideosGetter.csproj", "{1222BB10-01FD-432A-B552-3F8A29F89518}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScrapperTests", "WebScrapperTests\WebScrapperTests.csproj", "{DF9E3FA5-485F-41FD-AE5B-64D8437A5363}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GymVideosGetterTests", "GymVideosGetterTests\GymVideosGetterTests.csproj", "{DF9E3FA5-485F-41FD-AE5B-64D8437A5363}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

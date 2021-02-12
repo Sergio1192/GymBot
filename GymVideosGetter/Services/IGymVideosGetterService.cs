@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebScrapper.Models;
+using GymVideosGetter.Models;
 
-namespace WebScrapper.Services
+namespace GymVideosGetter.Services
 {
-    public interface IWebScrapperService
+    public interface IGymVideosGetterService
     {
         Task<IEnumerable<VideoModel>> GetVideosByWebNameAsync(string name);
     }

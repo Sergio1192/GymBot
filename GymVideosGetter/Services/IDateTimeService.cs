@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebScrapper.Services
+namespace GymVideosGetter.Services
 {
     public interface IDateTimeService
     {

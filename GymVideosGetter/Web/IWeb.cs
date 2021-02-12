@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebScrapper.Models;
-using WebScrapper.Services;
+using GymVideosGetter.Models;
+using GymVideosGetter.Services;
 
-namespace WebScrapper.Web
+namespace GymVideosGetter.Web
 {
     public interface IWeb
     {

@@ -1,4 +1,4 @@
-﻿namespace WebScrapper.Models
+﻿namespace GymVideosGetter.Models
 {
     public class VideoModel
     {
